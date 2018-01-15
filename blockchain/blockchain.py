@@ -8,6 +8,7 @@ import hashlib
 from textwrap import dedent
 from time import time
 from uuid import uuid4
+from urllib.parse import urlparse
 
 from flask import Flask, jsonify, request
 
@@ -16,6 +17,7 @@ class Blockchain(object):
     def __init__(self):
         self.chain = []
         self.current_transactions = []
+        self.nodes = set()
 
         # Create the genesis block
         self.new_block(prev_hash=1, proof=100)
@@ -58,6 +60,17 @@ class Blockchain(object):
         })
 
         return self.last_block["index"] + 1
+
+    def register_nodes(self, address):
+        """
+        Add a new node to the list of nodes
+
+        :param address: <str> Address of node
+        :return: None
+        """
+
+        parsed_url = urlparse(address)
+        self.nodes.add(parsed_url.netloc)
 
     def proof_of_work(self, last_proof):
         """
@@ -154,7 +167,7 @@ def mine():
 @app.route("/transactions/new", methods=["POST"])
 def new_transaction():
     values = request.get_json()
-
+    print(values)
     # check that the required fields are in the POSTed data
     required = ["sender", "recipient", "amount"]
     if not all(k in values for k in required):
