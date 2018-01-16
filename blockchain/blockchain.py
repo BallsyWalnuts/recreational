@@ -1,13 +1,12 @@
-"""
-
-"""
+#!/usr/bin/env python
+# Grant Richard Steiner
+# A simple blockchain
+# 16 January 2018
 
 import json
 import hashlib
 import requests
 
-from textwrap import dedent
-from time import time
 from uuid import uuid4
 from urllib.parse import urlparse
 
